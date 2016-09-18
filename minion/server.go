@@ -75,7 +75,7 @@ func Init(cfg *Config) error {
 		return err
 	}
 	// create agent
-	Agent = agent.NewAgent(reg, procMgr, mach, agentTTL)
+	Agent = agent.NewAgent(reg, procMgr, mach)
 
 	// reconciler drives the local process's state towards the desired state
 	// stored in the Registry.

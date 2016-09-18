@@ -21,15 +21,15 @@ func NewTiKVService() Service {
 			svcName:      TiKV_SERVICE,
 			version:      "1.0.0",
 			executor:     []string{},
-			command:      "bin/tikv-server",
-			args:         []string{"-S", "raftkv", "--addr", "0.0.0.0:5551", "--advertise-addr", "$HOST_IP:5551", "--etcd", "$ETCD_ADDR", "--store", "data", "--cluster-id", "1"},
+			command:      "tikv-server",
+			args:         []string{"-S", "raftkv", "--addr", "$HOST_IP:20160", "--pd", "$ETCD_ADDR", "-s", "data/tikv", "-I", "1", "-C", "etc/config.toml"},
 			environments: map[string]string{},
 			endpoints: map[string]utils.Endpoint{
 				"TIKV_ADDR": utils.Endpoint{
-					Port: utils.Port(5551),
+					Port: utils.Port(20160),
 				},
 				"TIKV_ADVERTISE_ADDR": utils.Endpoint{
-					Port: utils.Port(5551),
+					Port: utils.Port(20160),
 				},
 			},
 		},
@@ -39,13 +39,13 @@ func NewTiKVService() Service {
 func (s *TiKVService) ParseEndpointFromArgs(args []string) map[string]utils.Endpoint {
 	var res = make(map[string]utils.Endpoint)
 	argset := flag.NewFlagSet(TiKV_SERVICE, flag.ContinueOnError)
-	argset.String("addr", "127.0.0.1:5551", "")
-	argset.String("advertise-addr", "127.0.0.1:5551", "")
+	argset.String("addr", "127.0.0.1:20160", "")
+	argset.String("advertise-addr", "127.0.0.1:20160", "")
 	argset.String("L", "debug", "")
-	argset.String("store", "data", "")
+	argset.String("s", "data", "")
 	argset.String("S", "raftkv", "")
-	argset.String("cluster-id", "1", "")
-	argset.String("etcd", "127.0.0.1:2379", "")
+	argset.String("I", "1", "")
+	argset.String("pd", "127.0.0.1:2379", "")
 	if err := argset.Parse(args); err != nil {
 		// handle error
 		return s.endpoints

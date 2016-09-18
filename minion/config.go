@@ -15,9 +15,9 @@ const (
 	DefaultTTL = "10s"
 	// If an environment variable with the EnvPrefix is set, it will take precedence over values
 	// in the configuration file. Command line flags will override the environment variables.
-	EnvConfigPrefix = "TIDEMO_"
-	// First try to load configuration file in $(PWD), if not exist then check /etc/tiadm/tiadm.conf
-	DefaultConfigFile = "tidemo.conf"
+	EnvConfigPrefix = "TIDEMO_MINION_"
+	// First try to load configuration file in $(PWD), if not exist then check /etc/tidemo/minion.conf
+	DefaultConfigFile = "minion.conf"
 	DefaultConfigDir  = "/etc/tidemo"
 	DefaultKeyPrefix  = "/_pingcap.com/tidemo"
 )

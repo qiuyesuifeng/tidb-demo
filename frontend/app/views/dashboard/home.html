@@ -1,0 +1,83 @@
+<div>
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Overview</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <table class="table table-bordered">
+                <tr><td class="col-md-4"><b>Total Amount</b></td><td> {{ storageInfo.usage }} / {{ storageInfo.capacity }} MB</td></tr>
+                <tr><td><b>Alive Nodes</b></td><td> {{ numOfNodes }}</td></tr>
+            </table>
+        </div>
+
+        <div class="col-lg-9">
+            <nvd3 options='options' data='data'></nvd3>
+        </div>
+    </div>
+    <!-- /.row -->
+    <h3 class="page-header">Nodes</h3>
+    <div class="row">
+        <div ng-repeat="host in hosts | orderBy: 'publicIP' " ui-sref-active="" class="col-sm-4 col-md-2">
+            <div class="thumbnail">
+                <div class="caption">
+                    <p><i class="fa fa-desktop fa-3"></i> &nbsp;
+                        <a ui-sref="dashboard.host-status({machID: host.machID})">
+                            <b>{{ host.publicIP }} </b>
+                        </a>
+                    </p>
+                    <h5>CPU:</h5>
+                    <p>{{ host.isAlive? (host.machine.usageOfCPU | number:2) : 0 }}%</p>
+                    <h5> Mem Usage:</h5> 
+                    <p>{{ host.isAlive? (host.machine.usedMem / 1024.0 | number:2) : 0 }} GB / {{ host.isAlive? (host.machine.totalMem / 1024.0 | number:2) : 0 }} GB </p>
+                    <h5> Status: </h5>
+                    <p> <span class="label {{ host.isAlive? 'label-success' : 'label-warning' }}">{{ host.isAlive? 'Online' : 'Offline' }}</span> </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h3 class="page-header">Key Services</h3>
+
+    <div class="row">
+        <div class="col-md-4" ng-repeat="service in services | orderBy : 'svcName'">
+            <div class="panel panel-default">
+                <div class="panel-heading"><b>{{ service.svcName }}</b></div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>Command</td>
+                            <td>{{ service.command }}</td>
+                        </tr>
+                        <tr>
+                            <td>Args</td>
+                            <td>{{ service.args.join(' ') }}</td>
+                        </tr>
+                        <tr>
+                            <td>Dependencies</td>
+                            <td>{{ service.dependencies.join(' ') }}</td>
+                        </tr>
+                        <tr>
+                            <td>Endpoints</td>
+                            <td><li ng-repeat="e in service.endpoints track by $index">{{ e }}</li></td>
+                        </tr>
+                        <tr>
+                            <td>Version</td>
+                            <td>{{ service.version }}</td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td><label class="label {{ service.endpoints.length > 0? 'label-success':'label-warning' }}">{{ service.endpoints.length > 0? 'online' : 'offline' }}</label></td>
+                        </tr>
+                    </table>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <a ui-sref="dashboard.services" class="btn btn-default">Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

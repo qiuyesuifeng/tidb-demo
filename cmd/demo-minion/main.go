@@ -16,7 +16,7 @@ func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	rand.Seed(time.Now().UTC().UnixNano())
 
-	// Parse configuration from command-line arguments, environment variables or the config file of "tiadm.conf"
+	// Parse configuration from command-line arguments, environment variables or the config file of "minion.conf"
 	cfg, err := minion.ParseFlag()
 	if err != nil {
 		log.Fatalf("Parsing configuration flags failed: %v", err)

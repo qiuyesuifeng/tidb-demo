@@ -1,0 +1,196 @@
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Services and Processes</h1>
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <button type="button" class="btn btn-success" ng-click="openNewProcessDialog()"> Start New Process </button>
+        <!-- new process modal template -->
+        <script type="text/ng-template" id="NewProcessModal.html">
+            <div class="modal-header">
+                <h3 class="modal-title">Create New Process</h3>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Service Name</label>
+                        <div class="col-sm-9">
+                            <select class="form-control" ng-model="newProcData.serviceName">
+                                <option ng-repeat="service in services" value="{{ service.svcName }}">{{ service.svcName }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Host</label>
+                        <div class="col-sm-9">
+                            <select class="form-control" ng-model="newProcData.machineID">
+                                <option ng-repeat="host in hosts" ng-if="host.isAlive" value="{{ host.machID }}">{{ host.publicIP }} | MachineID: {{ host.machID }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Arguments</label>
+                        <div class="col-sm-9">
+                            <input class="form-control" id="newProcData_args" value="{{ getServiceArgs(newProcData.serviceName) }}" type="text">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+                <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+            </div>
+        </script>
+        <!-- /new process modal template -->
+    </div>
+</div>
+<!-- /.row -->
+<h3>Services</h3>
+<div class="row">
+    <div class="col-md-4" ng-repeat="service in services | orderBy : 'svcName'">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-sitemap fa-3"></i> &nbsp;
+                <b>{{ service.svcName }}</b>
+            </div>
+            <div class="panel-body">
+                <h4> Service Info </h4>
+                <table class="table table-bordered">
+                    <tr>
+                        <td><h5>Command</h5></td>
+                        <td>
+                            <div class="caption">
+                                <p>
+                                    <span>{{ service.executor.join(' ') }}</span>
+                                    <span>{{ service.command }}</span>
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><h5>Arguments</h5></td>
+                        <td>
+                            <div class="caption">
+                                <p><span>{{ service.args.join(' ') }}</span></p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><h5>Endpoints</h5></td>
+                        <td>
+                            <div class="caption">
+                                <p ng-repeat="endpoint in service.endpoints track by $index">
+                                    <span>{{ endpoint }}</span>
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><h5>Version</h5></td>
+                        <td>
+                            <div class="caption">
+                                <p><span>{{ service.version }}</span></p>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <h4> Processes </h4>
+                <table class="table table-bordered table-striped" ng-if="(processes | processFilter:service.svcName).length > 0">
+                    <thead>
+                        <th>Node</th>
+                        <th class="text-center">Status</th>
+                        <th>Operation</th>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="p in processes | processFilter:service.svcName | orderBy: '-procID'">
+                            <td class="col-md-4">
+                                <div class="caption">
+                                    <p><i class="fa fa-desktop fa-3"></i> &nbsp;
+                                        <a ui-sref="dashboard.host-status({machID: p.machID})">
+                                            <b>{{ p.publicIP }} </b>
+                                        </a>
+                                    </p>
+                                </div>
+                            </td>
+                            <td class="col-md-1 text-center">
+                                <span class="label label-success" ng-if="p.desiredState == 'StateStarted' && p.currentState == 'StateStarted' && p.isAlive"> Running </span>
+                                <span class="label label-warning" ng-if="p.desiredState == 'StateStarted' && p.currentState == 'StateStopped' && !p.isAlive"> Starting </span>
+                                <span class="label label-danger" ng-if="p.desiredState == 'StateStarted' && p.currentState == 'StateStarted' && !p.isAlive"> &nbsp;&nbsp;Fatal&nbsp;&nbsp;&nbsp; </span>
+                                <span class="label label-warning" ng-if="p.desiredState == 'StateStopped' && p.currentState == 'StateStarted'"> Stopping </span>
+                                <span class="label label-warning" ng-if="p.desiredState == 'StateStopped' && p.currentState == 'StateStopped'"> Stopped </span>
+                                <span class="label label-warning" ng-if="p.desiredState == 'StateStarted' && p.currentState == 'StateStopped' && p.isAlive"> Unknown </span>
+                            </td>
+                            <td class="col-md-1">
+                                <button class="btn btn-success btn-xs btn-block" ng-if="p.desiredState == 'StateStopped' && p.currentState == 'StateStopped'" ng-click="start(p)">Start</button>
+                                <button class="btn btn-warning btn-xs btn-block" ng-if="p.desiredState == 'StateStarted' && p.currentState == 'StateStarted'" ng-click="stop(p)">Stop</button>
+                                <button class="btn btn-danger btn-xs btn-block" ng-click="delete(p)">Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <h3>Processes</h3>
+        <table class="table table-bordered table-striped" ng-if="processes.length > 0">
+            <thead>
+                <th class="col-md-1">Service</th>
+                <th class="col-md-1">ID</th>
+                <th class="col-md-2">Node</th>
+                <th class="col-md-2">Command</th>
+                <th class="col-md-2">Args</th>
+                <th class="col-md-2">Endpoints</th>
+                <th class="col-md-1" class="text-center">Status</th>
+                <th class="col-md-1">Operation</th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="p in processes | orderBy: '-procID'">
+                    <td>{{ p.svcName }}</td>
+                    <td>{{ p.procID }}</td>
+                    <td>
+                        <div class="caption">
+                            <p><i class="fa fa-desktop fa-3"></i> &nbsp;
+                                <a ui-sref="dashboard.host-status({machID: p.machID})">
+                                    <b>{{ p.publicIP }} </b>
+                                </a>
+                            </p>
+                            <div>
+                                <p><h5><b>Host:</b> {{ p.hostName }}</h5></p>
+                                <p>
+                                    <h5>{{ p.hostMeta.region }}, {{ p.hostMeta.datacenter }}</h5>
+                                </p>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span>{{ p.executor.join(' ') }}</span>
+                        <span>{{ p.command }}</span>
+                    </td>
+                    <td>{{ p.args.join(' ') }}</td>
+                    <td>
+                        <li ng-repeat="endpoint in p.endpoints track by $index">{{ endpoint }}</li>
+                    </td>
+                    <td class="text-center">
+                        <span class="label label-success" ng-if="p.desiredState == 'StateStarted' && p.currentState == 'StateStarted' && p.isAlive"> Running </span>
+                        <span class="label label-warning" ng-if="p.desiredState == 'StateStarted' && p.currentState == 'StateStopped' && !p.isAlive"> Starting </span>
+                        <span class="label label-danger" ng-if="p.desiredState == 'StateStarted' && p.currentState == 'StateStarted' && !p.isAlive"> &nbsp;&nbsp;Fatal&nbsp;&nbsp;&nbsp; </span>
+                        <span class="label label-warning" ng-if="p.desiredState == 'StateStopped' && p.currentState == 'StateStarted'"> Stopping </span>
+                        <span class="label label-warning" ng-if="p.desiredState == 'StateStopped' && p.currentState == 'StateStopped'"> Stopped </span>
+                        <span class="label label-warning" ng-if="p.desiredState == 'StateStarted' && p.currentState == 'StateStopped' && p.isAlive"> Unknown </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-success btn-xs btn-block" ng-if="p.desiredState == 'StateStopped' && p.currentState == 'StateStopped'" ng-click="start(p)">Start</button>
+                        <button class="btn btn-warning btn-xs btn-block" ng-if="p.desiredState == 'StateStarted' && p.currentState == 'StateStarted'" ng-click="stop(p)">Stop</button>
+                        <button class="btn btn-danger btn-xs btn-block" ng-click="delete(p)">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- /.row -->

@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"sync"
-	"time"
 
 	"github.com/ngaut/log"
 	"github.com/qiuyesuifeng/tidb-demo/machine"
@@ -18,7 +17,6 @@ type Agent struct {
 	Reg        registry.Registry
 	ProcMgr    proc.ProcMgr
 	Mach       machine.Machine
-	TTL        time.Duration
 	publishch  chan []string
 	procsCache map[string]*proc.ProcessStatus
 	cacheMutex sync.RWMutex
@@ -46,12 +44,11 @@ func (a *Agent) GetProcsFomeCache() map[string]*proc.ProcessStatus {
 	return a.procsCache
 }
 
-func NewAgent(reg registry.Registry, pm proc.ProcMgr, m machine.Machine, ttl time.Duration) *Agent {
+func NewAgent(reg registry.Registry, pm proc.ProcMgr, m machine.Machine) *Agent {
 	return &Agent{
 		Reg:        reg,
 		ProcMgr:    pm,
 		Mach:       m,
-		TTL:        ttl,
 		publishch:  make(chan []string, 10),
 		procsCache: make(map[string]*proc.ProcessStatus),
 	}
