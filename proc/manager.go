@@ -2,8 +2,9 @@ package proc
 
 import (
 	"errors"
-	"github.com/ngaut/log"
 	"sync"
+
+	"github.com/ngaut/log"
 	"github.com/qiuyesuifeng/tidb-demo/pkg/utils"
 )
 

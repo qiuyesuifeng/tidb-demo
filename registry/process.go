@@ -3,13 +3,14 @@ package registry
 import (
 	"errors"
 	"fmt"
-	etcd "github.com/coreos/etcd/client"
-	"github.com/ngaut/log"
 	"path"
 	"strings"
 	"time"
-	"github.com/qiuyesuifeng/tidb-demo/proc"
+
+	etcd "github.com/coreos/etcd/client"
+	"github.com/ngaut/log"
 	"github.com/qiuyesuifeng/tidb-demo/pkg/utils"
+	"github.com/qiuyesuifeng/tidb-demo/proc"
 )
 
 const processPrefix = "process"

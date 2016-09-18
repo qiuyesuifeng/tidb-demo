@@ -1,12 +1,13 @@
 package minion
 
 import (
-	"path"
-	"flag"
-	"github.com/rakyll/globalconf"
-	"github.com/ngaut/log"
 	"errors"
+	"flag"
+	"path"
+
+	"github.com/ngaut/log"
 	"github.com/qiuyesuifeng/tidb-demo/pkg/utils"
+	"github.com/rakyll/globalconf"
 )
 
 const (
@@ -31,9 +32,6 @@ type Config struct {
 	HostRegion         string
 	HostIDC            string
 	AgentTTL           string
-	TokenLimit         int
-	IsMock             bool
-	APIPort            int
 }
 
 func ParseFlag() (*Config, error) {

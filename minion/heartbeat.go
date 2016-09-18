@@ -1,13 +1,15 @@
 package minion
 
 import (
+	"time"
+
 	"github.com/jonboulle/clockwork"
 	"github.com/ngaut/log"
-	"time"
+	"github.com/qiuyesuifeng/tidb-demo/agent"
 	"github.com/qiuyesuifeng/tidb-demo/registry"
 )
 
-func NewAgentHeartbeat(reg registry.Registry, ag *Agent, ttl time.Duration) *AgentHeartbeat {
+func NewAgentHeartbeat(reg registry.Registry, ag *agent.Agent, ttl time.Duration) *AgentHeartbeat {
 	return &AgentHeartbeat{
 		reg:   reg,
 		agent: ag,
@@ -18,7 +20,7 @@ func NewAgentHeartbeat(reg registry.Registry, ag *Agent, ttl time.Duration) *Age
 
 type AgentHeartbeat struct {
 	reg   registry.Registry
-	agent *Agent
+	agent *agent.Agent
 	clock clockwork.Clock
 	ttl   time.Duration
 }

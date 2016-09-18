@@ -7,12 +7,7 @@ import (
 
 const bootstrapPrefix = "bootstrapped"
 
-func (r *EtcdRegistry) IsBootstrapped(isMock bool) bool {
-	// don't need bootstrap in mock mode
-	if isMock {
-		return true
-	}
-
+func (r *EtcdRegistry) IsBootstrapped() bool {
 	key := r.prefixed(bootstrapPrefix)
 	opts := &etcd.GetOptions{
 		Quorum: true,

@@ -1,8 +1,9 @@
 package machine
 
 import (
-	"github.com/toolkits/nux"
 	"sync"
+
+	"github.com/toolkits/nux"
 )
 
 const (

@@ -4,15 +4,16 @@ import (
 	"errors"
 	"fmt"
 	"math/rand"
+	"net"
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strings"
 	"strconv"
+	"strings"
 	"time"
-	"net"
-	"github.com/ngaut/log"
+
 	"github.com/docker/libcontainer/netlink"
+	"github.com/ngaut/log"
 )
 
 const (

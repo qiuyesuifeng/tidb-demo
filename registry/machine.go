@@ -3,10 +3,11 @@ package registry
 import (
 	"errors"
 	"fmt"
-	etcd "github.com/coreos/etcd/client"
-	"github.com/ngaut/log"
 	"path"
 	"time"
+
+	etcd "github.com/coreos/etcd/client"
+	"github.com/ngaut/log"
 	"github.com/qiuyesuifeng/tidb-demo/machine"
 )
 

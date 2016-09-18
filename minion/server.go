@@ -1,17 +1,20 @@
 package minion
 
 import (
+	"errors"
+	"fmt"
+	"strings"
 	"sync"
 	"time"
-	"fmt"
-	"errors"
-	svc "github.com/qiuyesuifeng/tidb-demo/service"
+
 	etcd "github.com/coreos/etcd/client"
-	"strings"
-	"github.com/qiuyesuifeng/tidb-demo/registry"
 	"github.com/ngaut/log"
-	"github.com/qiuyesuifeng/tidb-demo/minion/proc"
-	"github.com/qiuyesuifeng/tidb-demo/minion/machine"
+	"github.com/qiuyesuifeng/tidb-demo/agent"
+	"github.com/qiuyesuifeng/tidb-demo/machine"
+	"github.com/qiuyesuifeng/tidb-demo/pkg/utils"
+	"github.com/qiuyesuifeng/tidb-demo/proc"
+	"github.com/qiuyesuifeng/tidb-demo/registry"
+	svc "github.com/qiuyesuifeng/tidb-demo/service"
 )
 
 const (
@@ -23,7 +26,7 @@ var (
 	wg      sync.WaitGroup // used to co-ordinate shutdown
 	running bool           = false
 
-	Agent      *Agent
+	Agent      *agent.Agent
 	Reconciler *AgentReconciler
 	Publisher  *ProcessStatePublisher
 	Heartbeat  *AgentHeartbeat
@@ -39,7 +42,7 @@ func Init(cfg *Config) error {
 	}
 
 	// init registry driver of etcd
-	etcdAddrs := strings.Join(TrimAddrs(cfg.EtcdServers), ",")
+	etcdAddrs := strings.Join(utils.TrimAddrs(cfg.EtcdServers), ",")
 	etcdTimeout := time.Duration(cfg.EtcdRequestTimeout) * time.Millisecond
 	etcdPrefix := cfg.EtcdKeyPrefix
 	etcdCfg := etcd.Config{
@@ -55,7 +58,7 @@ func Init(cfg *Config) error {
 	es := registry.NewEtcdEventStream(kAPI, etcdPrefix)
 
 	// check whether or not the registry is bootstrapped
-	if ok := reg.IsBootstrapped(cfg); !ok {
+	if ok := reg.IsBootstrapped(); !ok {
 		if err := reg.Bootstrap(); err != nil {
 			log.Fatalf("Bootstarp failed, error: %v", err)
 		}
@@ -67,12 +70,12 @@ func Init(cfg *Config) error {
 	// init local processes manager
 	procMgr := proc.NewProcessManager()
 	// init this machine
-	mach, err := machine.NewMachineFromConfig(cfg)
+	mach, err := machine.NewMachine(cfg.HostIP, cfg.HostName, cfg.HostRegion, cfg.HostIDC)
 	if err != nil {
 		return err
 	}
 	// create agent
-	Agent = NewAgent(reg, procMgr, mach, agentTTL)
+	Agent = agent.NewAgent(reg, procMgr, mach, agentTTL)
 
 	// reconciler drives the local process's state towards the desired state
 	// stored in the Registry.

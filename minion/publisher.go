@@ -1,13 +1,15 @@
 package minion
 
 import (
+	"time"
+
 	"github.com/jonboulle/clockwork"
 	"github.com/ngaut/log"
-	"time"
+	"github.com/qiuyesuifeng/tidb-demo/agent"
 	"github.com/qiuyesuifeng/tidb-demo/registry"
 )
 
-func NewProcessStatePublisher(reg registry.Registry, ag *Agent, ttl time.Duration) *ProcessStatePublisher {
+func NewProcessStatePublisher(reg registry.Registry, ag *agent.Agent, ttl time.Duration) *ProcessStatePublisher {
 	return &ProcessStatePublisher{
 		reg:   reg,
 		agent: ag,
@@ -18,7 +20,7 @@ func NewProcessStatePublisher(reg registry.Registry, ag *Agent, ttl time.Duratio
 
 type ProcessStatePublisher struct {
 	reg   registry.Registry
-	agent *Agent
+	agent *agent.Agent
 	clock clockwork.Clock
 	ttl   time.Duration
 }
@@ -34,7 +36,7 @@ func (p *ProcessStatePublisher) Run(stopc <-chan struct{}) {
 			if err := p.doPublishAll(); err != nil {
 				log.Errorf("ProcessStatePublisher failed, %v", err)
 			}
-		case pub := <-p.agent.publish():
+		case pub := <-p.agent.Publish():
 			log.Debug("Trigger ProcessStatePublisher by event of publish")
 			if err := p.doPublish(pub); err != nil {
 				log.Errorf("ProcessStatePublisher failed, %v", err)

@@ -1,14 +1,14 @@
 package registry
 
 import (
-	etcd "github.com/coreos/etcd/client"
 	"path"
 	"strings"
 	"time"
-	"github.com/qiuyesuifeng/tidb-demo/minion"
-	"golang.org/x/net/context"
+
+	etcd "github.com/coreos/etcd/client"
 	"github.com/ngaut/log"
 	"github.com/qiuyesuifeng/tidb-demo/pkg/utils"
+	"golang.org/x/net/context"
 )
 
 const (
@@ -25,7 +25,7 @@ type EtcdEventStream struct {
 	rootPrefix string
 }
 
-func NewEtcdEventStream(kapi etcd.KeysAPI, keyPrefix string) minion.EventStream {
+func NewEtcdEventStream(kapi etcd.KeysAPI, keyPrefix string) utils.EventStream {
 	key := path.Join(keyPrefix, jobPrefix)
 	opts := &etcd.WatcherOptions{
 		AfterIndex: 0,

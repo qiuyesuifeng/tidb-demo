@@ -1,9 +1,10 @@
 package machine
 
 import (
+	"time"
+
 	"github.com/jonboulle/clockwork"
 	"github.com/ngaut/log"
-	"time"
 )
 
 const (

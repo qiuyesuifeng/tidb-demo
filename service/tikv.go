@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"github.com/qiuyesuifeng/tidb-demo/minion"
+
 	"github.com/qiuyesuifeng/tidb-demo/pkg/utils"
 )
 
@@ -26,10 +26,10 @@ func NewTiKVService() Service {
 			environments: map[string]string{},
 			endpoints: map[string]utils.Endpoint{
 				"TIKV_ADDR": utils.Endpoint{
-					Port: minion.Port(5551),
+					Port: utils.Port(5551),
 				},
 				"TIKV_ADVERTISE_ADDR": utils.Endpoint{
-					Port: minion.Port(5551),
+					Port: utils.Port(5551),
 				},
 			},
 		},
@@ -58,7 +58,7 @@ func (s *TiKVService) ParseEndpointFromArgs(args []string) map[string]utils.Endp
 				addrParts := strings.Split(flag.Value.String(), ":")
 				if len(addrParts) > 1 {
 					if p, err := strconv.Atoi(addrParts[1]); err == nil {
-						v.Port = minion.Port(p)
+						v.Port = utils.Port(p)
 					}
 				}
 			}
@@ -70,7 +70,7 @@ func (s *TiKVService) ParseEndpointFromArgs(args []string) map[string]utils.Endp
 						v.IPAddr = addrParts[0]
 					}
 					if p, err := strconv.Atoi(addrParts[1]); err == nil {
-						v.Port = minion.Port(p)
+						v.Port = utils.Port(p)
 					}
 				}
 			}

@@ -2,13 +2,15 @@ package minion
 
 import (
 	"fmt"
-	"github.com/jonboulle/clockwork"
-	"github.com/ngaut/log"
 	"strings"
 	"time"
-	"github.com/qiuyesuifeng/tidb-demo/registry"
-	"github.com/qiuyesuifeng/tidb-demo/proc"
+
+	"github.com/jonboulle/clockwork"
+	"github.com/ngaut/log"
+	"github.com/qiuyesuifeng/tidb-demo/agent"
 	"github.com/qiuyesuifeng/tidb-demo/pkg/utils"
+	"github.com/qiuyesuifeng/tidb-demo/proc"
+	"github.com/qiuyesuifeng/tidb-demo/registry"
 )
 
 const (
@@ -16,7 +18,7 @@ const (
 	reconcileInterval = 5 * time.Second
 )
 
-func NewReconciler(reg registry.Registry, es utils.EventStream, ag *Agent) *AgentReconciler {
+func NewReconciler(reg registry.Registry, es utils.EventStream, ag *agent.Agent) *AgentReconciler {
 	return &AgentReconciler{
 		reg:     reg,
 		eStream: es,
@@ -28,7 +30,7 @@ func NewReconciler(reg registry.Registry, es utils.EventStream, ag *Agent) *Agen
 type AgentReconciler struct {
 	reg     registry.Registry
 	eStream utils.EventStream
-	agent   *Agent
+	agent   *agent.Agent
 	clock   clockwork.Clock
 }
 
@@ -62,7 +64,7 @@ func (ar *AgentReconciler) reconcile() error {
 	if err != nil {
 		return err
 	}
-	ar.agent.subscribe(toPublish)
+	ar.agent.Subscribe(toPublish)
 	elapsed := time.Now().Sub(start)
 	msg := fmt.Sprintf("Reconciling completed in %s", elapsed)
 	if elapsed > reconcileInterval {

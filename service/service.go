@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/qiuyesuifeng/tidb-demo/registry"
 	"github.com/qiuyesuifeng/tidb-demo/pkg/utils"
+	"github.com/qiuyesuifeng/tidb-demo/registry"
 )
 
 var Registered map[string]Service

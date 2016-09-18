@@ -4,9 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"time"
+
 	"github.com/qiuyesuifeng/tidb-demo/machine"
-	"github.com/qiuyesuifeng/tidb-demo/proc"
 	"github.com/qiuyesuifeng/tidb-demo/pkg/utils"
+	"github.com/qiuyesuifeng/tidb-demo/proc"
 )
 
 // Registry interface defined a set of operations to access a distributed key value store,
@@ -15,7 +16,7 @@ import (
 type Registry interface {
 	GetEtcdAddrs() string
 	// Check whether tidemo registry is bootstrapped normally
-	IsBootstrapped(isMock bool) bool
+	IsBootstrapped() bool
 	// Initialize the basic directory structure of tidemo registry
 	Bootstrap() error
 	// Get Infomation of machine in cluster by the given machID

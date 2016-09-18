@@ -3,14 +3,14 @@ package service
 import (
 	"encoding/json"
 	"flag"
-	"github.com/ngaut/log"
 	"io/ioutil"
 	"net/http"
 	"strconv"
 	"time"
-	"github.com/qiuyesuifeng/tidb-demo/minion"
-	"github.com/qiuyesuifeng/tidb-demo/minion/proc"
+
+	"github.com/ngaut/log"
 	"github.com/qiuyesuifeng/tidb-demo/pkg/utils"
+	"github.com/qiuyesuifeng/tidb-demo/proc"
 )
 
 const TiDB_SERVICE = "TiDB"
@@ -30,12 +30,12 @@ func NewTiDBService() Service {
 			environments: map[string]string{},
 			endpoints: map[string]utils.Endpoint{
 				"TIDB_ADDR": utils.Endpoint{
-					Protocol: minion.Protocol("mysql"),
-					Port:     minion.Port(4000),
+					Protocol: utils.Protocol("mysql"),
+					Port:     utils.Port(4000),
 				},
 				"TIDB_STATUS_ADDR": utils.Endpoint{
-					Protocol: minion.Protocol("http"),
-					Port:     minion.Port(10080),
+					Protocol: utils.Protocol("http"),
+					Port:     utils.Port(10080),
 				},
 			},
 		},
@@ -61,13 +61,13 @@ func (s *TiDBService) ParseEndpointFromArgs(args []string) map[string]utils.Endp
 		case "TIDB_ADDR":
 			if flag := argset.Lookup("P"); flag != nil {
 				if p, err := strconv.Atoi(flag.Value.String()); err == nil {
-					v.Port = minion.Port(p)
+					v.Port = utils.Port(p)
 				}
 			}
 		case "TIDB_STATUS_ADDR":
 			if flag := argset.Lookup("status"); flag != nil {
 				if p, err := strconv.Atoi(flag.Value.String()); err == nil {
-					v.Port = minion.Port(p)
+					v.Port = utils.Port(p)
 				}
 			}
 		}

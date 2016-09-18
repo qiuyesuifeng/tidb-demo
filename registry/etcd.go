@@ -2,11 +2,12 @@ package registry
 
 import (
 	"fmt"
-	etcd "github.com/coreos/etcd/client"
-	"golang.org/x/net/context"
 	"path"
 	"strconv"
 	"time"
+
+	etcd "github.com/coreos/etcd/client"
+	"golang.org/x/net/context"
 )
 
 const maxProcessID = "max-process-id"

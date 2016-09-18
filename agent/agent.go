@@ -1,16 +1,17 @@
-package minion
+package agent
 
 import (
-	"sync"
-	"fmt"
-	"github.com/qiuyesuifeng/tidb-demo/registry"
-	"github.com/qiuyesuifeng/tidb-demo/proc"
-	"github.com/qiuyesuifeng/tidb-demo/machine"
-	"github.com/qiuyesuifeng/tidb-demo/service"
-	"time"
-	"github.com/ngaut/log"
 	"errors"
+	"fmt"
+	"sync"
+	"time"
+
+	"github.com/ngaut/log"
+	"github.com/qiuyesuifeng/tidb-demo/machine"
 	"github.com/qiuyesuifeng/tidb-demo/pkg/utils"
+	"github.com/qiuyesuifeng/tidb-demo/proc"
+	"github.com/qiuyesuifeng/tidb-demo/registry"
+	"github.com/qiuyesuifeng/tidb-demo/service"
 )
 
 type Agent struct {
@@ -23,13 +24,13 @@ type Agent struct {
 	cacheMutex sync.RWMutex
 }
 
-func (a *Agent) subscribe(procIDs []string) {
+func (a *Agent) Subscribe(procIDs []string) {
 	if procIDs != nil && len(procIDs) > 0 {
 		a.publishch <- procIDs
 	}
 }
 
-func (a *Agent) publish() chan []string {
+func (a *Agent) Publish() chan []string {
 	return a.publishch
 }
 

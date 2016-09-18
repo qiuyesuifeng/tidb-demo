@@ -2,8 +2,6 @@ package proc
 
 import (
 	"fmt"
-	"github.com/juju/errors"
-	"github.com/ngaut/log"
 	"io"
 	"os"
 	"os/exec"
@@ -13,7 +11,10 @@ import (
 	"sync"
 	"syscall"
 	"time"
-	"github.com/qiuyesuifeng/tidb-demo/minion"
+
+	"github.com/juju/errors"
+	"github.com/ngaut/log"
+	"github.com/qiuyesuifeng/tidb-demo/pkg/utils"
 )
 
 type Proc interface {
@@ -112,9 +113,9 @@ type Event struct {
 
 func NewProcess(procID string, svcName string, executor []string, command string, args []string, stdoutFile string,
 	stderrFile string, environment map[string]string, metadata map[string]string, pwd string) (Proc, error) {
-	var root = minion.GetRootDir()
+	var root = utils.GetRootDir()
 	var cmd = filepath.Join(root, command)
-	if _, err := minion.CheckFileExist(cmd); err != nil {
+	if _, err := utils.CheckFileExist(cmd); err != nil {
 		e := fmt.Sprintf("The command's binary file not exists in path, %s", cmd)
 		return nil, errors.New(e)
 	}

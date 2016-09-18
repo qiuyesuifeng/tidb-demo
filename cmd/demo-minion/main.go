@@ -1,12 +1,13 @@
 package main
 
 import (
+	"math/rand"
 	"os"
-	"syscall"
 	"os/signal"
 	"runtime"
-	"math/rand"
+	"syscall"
 	"time"
+
 	"github.com/ngaut/log"
 	"github.com/qiuyesuifeng/tidb-demo/minion"
 )

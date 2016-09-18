@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"github.com/qiuyesuifeng/tidb-demo/minion"
+
 	"github.com/qiuyesuifeng/tidb-demo/pkg/utils"
 )
 
@@ -26,13 +26,13 @@ func NewPDService() Service {
 			environments: map[string]string{},
 			endpoints: map[string]utils.Endpoint{
 				"PD_ADDR": utils.Endpoint{
-					Port: minion.Port(1234),
+					Port: utils.Port(1234),
 				},
 				"PD_ADVERTISE_ADDR": utils.Endpoint{
-					Port: minion.Port(1234),
+					Port: utils.Port(1234),
 				},
 				"PD_PPROF_ADDR": utils.Endpoint{
-					Port: minion.Port(6060),
+					Port: utils.Port(6060),
 				},
 			},
 		},
@@ -63,7 +63,7 @@ func (s *PDService) ParseEndpointFromArgs(args []string) map[string]utils.Endpoi
 				addrParts := strings.Split(flag.Value.String(), ":")
 				if len(addrParts) > 1 {
 					if p, err := strconv.Atoi(addrParts[1]); err == nil {
-						v.Port = minion.Port(p)
+						v.Port = utils.Port(p)
 					}
 				}
 			}
@@ -75,7 +75,7 @@ func (s *PDService) ParseEndpointFromArgs(args []string) map[string]utils.Endpoi
 						v.IPAddr = addrParts[0]
 					}
 					if p, err := strconv.Atoi(addrParts[1]); err == nil {
-						v.Port = minion.Port(p)
+						v.Port = utils.Port(p)
 					}
 				}
 			}
@@ -84,7 +84,7 @@ func (s *PDService) ParseEndpointFromArgs(args []string) map[string]utils.Endpoi
 				addrParts := strings.Split(flag.Value.String(), ":")
 				if len(addrParts) > 1 {
 					if p, err := strconv.Atoi(addrParts[1]); err == nil {
-						v.Port = minion.Port(p)
+						v.Port = utils.Port(p)
 					}
 				}
 			}

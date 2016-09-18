@@ -3,13 +3,13 @@ package machine
 import (
 	"crypto/sha1"
 	"fmt"
-	"github.com/ngaut/log"
 	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sync"
-	"github.com/qiuyesuifeng/tidb-demo/minion"
+
+	"github.com/ngaut/log"
 	"github.com/qiuyesuifeng/tidb-demo/pkg/utils"
 )
 
@@ -37,7 +37,7 @@ type machine struct {
 	rwMutex    sync.RWMutex
 }
 
-func NewMachineFromConfig(cfg *minion.Config) (Machine, error) {
+func NewMachine(hostip, hostname, hostregion, hostidc string) (Machine, error) {
 	machID, err := readLocalMachineID()
 	if err != nil {
 		log.Errorf("Read local machine ID error, %v", err)
@@ -45,8 +45,8 @@ func NewMachineFromConfig(cfg *minion.Config) (Machine, error) {
 	}
 
 	var publicIP string
-	if len(cfg.HostIP) > 0 {
-		publicIP = cfg.HostIP
+	if len(hostip) > 0 {
+		publicIP = hostip
 	} else {
 		if ipaddrs, err := utils.IntranetIP(); err != nil {
 			return nil, err
@@ -58,8 +58,8 @@ func NewMachineFromConfig(cfg *minion.Config) (Machine, error) {
 		}
 	}
 	var hostName string
-	if len(cfg.HostName) > 0 {
-		hostName = cfg.HostName
+	if len(hostname) > 0 {
+		hostName = hostname
 	} else {
 		hostName = publicIP
 	}
@@ -67,8 +67,8 @@ func NewMachineFromConfig(cfg *minion.Config) (Machine, error) {
 	mach := &machine{
 		machID:     machID,
 		hostName:   hostName,
-		hostRegion: cfg.HostRegion,
-		hostIDC:    cfg.HostIDC,
+		hostRegion: hostregion,
+		hostIDC:    hostidc,
 		publicIP:   publicIP,
 		stat: &MachineStat{
 			LoadAvg:     []float64{},
