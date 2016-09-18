@@ -1,0 +1,11 @@
+# Counter Configuration.
+
+addr = ":10081"
+tps = 100
+
+[db]
+host = "127.0.0.1"
+user = "root"
+password = ""
+port = 4000
+name = "test"
