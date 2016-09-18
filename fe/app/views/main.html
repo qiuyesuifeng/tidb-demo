@@ -1,0 +1,22 @@
+<h2>TiDB Transaction DEMO</h2>
+<hr/>
+<div class="jumbotron">
+  <h1>{{ count }}</h1>
+  <p class="lead">
+  UPDATE counter SET value = value + 1 WHERE id = 1;
+  </p>
+</div>
+
+<div class="row marketing">
+  <code>
+  <pre>
+mysql> desc counter;
+
++-------+------------+------+------+---------+-------+
+| Field | Type       | Null | Key  | Default | Extra |
++-------+------------+------+------+---------+-------+
+| id    | int(11)    | NO   | PRI  | NULL    |       |
+| value | bigint(21) | YES  |      | NULL    |       |
++-------+------------+------+------+---------+-------+</pre>
+  </code>
+</div>
