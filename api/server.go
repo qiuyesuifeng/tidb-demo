@@ -8,9 +8,9 @@ import (
 	"github.com/astaxie/beego/context"
 	assetfs "github.com/elazarl/go-bindata-assetfs"
 	"github.com/ngaut/log"
-	"github.com/pingcap/tiadmin/frontend"
 	"github.com/qiuyesuifeng/tidb-demo/master"
 	"github.com/qiuyesuifeng/tidb-demo/schema"
+	"github.com/qiuyesuifeng/tidb-demo/frontend"
 )
 
 func bad_request(rw http.ResponseWriter, r *http.Request) {
