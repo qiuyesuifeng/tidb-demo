@@ -272,6 +272,7 @@ func newCounterHandler(rd *render.Render, db *sql.DB) *counterHandler {
 func (h *counterHandler) Get(w http.ResponseWriter, r *http.Request) {
 	sql := "select value from counter where id = 1;"
 	value, _ := getCount(h.db, sql)
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	h.rd.JSON(w, http.StatusOK, &Count{Count: value})
 }
 
