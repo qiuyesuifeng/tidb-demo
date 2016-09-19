@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"flag"
 	"fmt"
+	"math/rand"
 	"net/http"
 	"os"
 	"os/signal"
@@ -138,9 +139,7 @@ func (c *counter) start() error {
 func (c *counter) run() {
 	defer c.wg.Done()
 
-	duration := time.Second / time.Duration(c.cfg.Tps)
-
-	timer := time.NewTicker(duration)
+	timer := time.NewTicker(time.Second)
 	defer timer.Stop()
 
 	for {
@@ -149,7 +148,7 @@ func (c *counter) run() {
 			c.done <- struct{}{}
 			return
 		case <-timer.C:
-			c.doJob()
+			c.doJob(c.cfg.Tps)
 		}
 	}
 }
@@ -176,11 +175,15 @@ func (c *counter) init() error {
 	return nil
 }
 
-func (c *counter) doJob() {
-	sql := "update counter set value = value + 1 where id = 1;"
-	err := execSQL(c.db, sql)
-	if err != nil {
-		log.Fatal(err)
+func (c *counter) doJob(count int64) {
+	number := rand.Int63n(count)
+
+	for i := 0; i < int(number); i++ {
+		sql := "update counter set value = value + 1 where id = 1;"
+		err := execSQL(c.db, sql)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 }
 
