@@ -217,3 +217,8 @@ func (a *Agent) ShowTiDBRealPerfermance() *service.TiDBPerfMetrics {
 	tidbService := service.Registered[service.TiDB_SERVICE].(*service.TiDBService)
 	return tidbService.RetrieveRealPerformance(cachedProcs)
 }
+
+func (a *Agent) ShowLocalTiDBRealPerfermance() *service.TiDBPerfMetrics {
+	tidbService := service.Registered[service.TiDB_SERVICE].(*service.TiDBService)
+	return tidbService.RetrieveLocalRealPerformance()
+}

@@ -93,6 +93,17 @@ func (s *TiDBService) RetrieveRealPerformance(allProcesses map[string]*proc.Proc
 	return res
 }
 
+func (s *TiDBService) RetrieveLocalRealPerformance() *TiDBPerfMetrics {
+	var res = &TiDBPerfMetrics{}
+	ep, _ := utils.ParseEndpoint("http://127.0.0.1:10080")
+	if status, err := s.fetchTiDBStatusFromHttp(ep); err == nil {
+		// accumulating
+		res.Connections += status.Connections
+		res.TPS += status.TPS
+	}
+	return res
+}
+
 func (s *TiDBService) fetchTiDBStatusFromHttp(addr utils.Endpoint) (*TiDBPerfMetrics, error) {
 	url := addr.String() + "/status"
 	req, err := http.NewRequest("GET", url, nil)

@@ -12,7 +12,8 @@ type MonitorController struct {
 
 func (c *MonitorController) TiDBPerformanceMetrics() {
 	// TODO: implement it
-	var status = master.Agent.ShowTiDBRealPerfermance()
+	//var status = master.Agent.ShowTiDBRealPerfermance()
+	var status = master.Agent.ShowLocalTiDBRealPerfermance()
 	c.Data["json"] = schema.PerfMetrics{
 		Tps:   int32(status.TPS),
 		Qps:   int32(0),
