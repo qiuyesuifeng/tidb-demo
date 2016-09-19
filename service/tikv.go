@@ -46,6 +46,7 @@ func (s *TiKVService) ParseEndpointFromArgs(args []string) map[string]utils.Endp
 	argset.String("S", "raftkv", "")
 	argset.String("I", "1", "")
 	argset.String("pd", "127.0.0.1:2379", "")
+	argset.String("C", "/etc/tikv/config.toml", "")
 	if err := argset.Parse(args); err != nil {
 		// handle error
 		return s.endpoints
